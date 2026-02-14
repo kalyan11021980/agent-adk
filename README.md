@@ -391,6 +391,81 @@ health-ai/
 
 ---
 
+## Using with TrueFoundry
+
+You can swap out Gemini for any model deployed on [TrueFoundry](https://www.truefoundry.com/) — their endpoints are OpenAI-compatible, and ADK supports them via `LiteLlm`.
+
+> **Requirement:** Your TrueFoundry model must support **function calling / tool use** (e.g. GPT-4o, Claude, Llama 3.1+, Mistral). Without it the agent cannot invoke its tools.
+
+### 1. Install the LiteLLM extension
+
+```bash
+pip install google-adk[extensions]
+```
+
+### 2. Update `src/health_ai/agent.py`
+
+Replace the `model` string with a `LiteLlm` instance:
+
+**Via AI Gateway (recommended):**
+
+```python
+from google.adk.models.lite_llm import LiteLlm
+
+root_agent = LlmAgent(
+    model=LiteLlm(
+        model="openai/provider-account/model-name",
+        api_base="https://your-control-plane.truefoundry.cloud/api/llm",
+        api_key="your-truefoundry-pat-or-vat",
+    ),
+    name="health_ai_agent",
+    ...
+)
+```
+
+**Via direct model endpoint (self-hosted vLLM/SGLang):**
+
+```python
+root_agent = LlmAgent(
+    model=LiteLlm(
+        model="openai/your-model-name",
+        api_base="https://your-deployed-service-url/v1",
+        api_key="TEST",  # or real credentials if auth is enabled
+    ),
+    ...
+)
+```
+
+### 3. Environment variables (cleaner approach)
+
+Add to `.env`:
+
+```env
+TRUEFOUNDRY_API_BASE=https://your-control-plane.truefoundry.cloud/api/llm
+TRUEFOUNDRY_API_KEY=your-api-key
+TRUEFOUNDRY_MODEL=openai/provider-account/model-name
+```
+
+Then read them in `agent.py`:
+
+```python
+import os
+from google.adk.models.lite_llm import LiteLlm
+
+root_agent = LlmAgent(
+    model=LiteLlm(
+        model=os.environ["TRUEFOUNDRY_MODEL"],
+        api_base=os.environ["TRUEFOUNDRY_API_BASE"],
+        api_key=os.environ["TRUEFOUNDRY_API_KEY"],
+    ),
+    ...
+)
+```
+
+Everything else (tools, A2A server, frontend) stays the same — only the model layer changes.
+
+---
+
 ## A2A Protocol Details
 
 This project implements the [A2A protocol](https://github.com/google/A2A) v0.3.0 with dual transport:
