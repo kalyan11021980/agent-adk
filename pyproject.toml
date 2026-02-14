@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "health-ai"
+version = "0.1.0"
+description = "Health AI Agent — Google ADK with A2A Protocol"
+requires-python = ">=3.11"
+dependencies = [
+    "google-adk[a2a]>=1.18.0",
+    "a2a-sdk>=0.3.22",
+    "pydantic-settings>=2.7.0",
+    "uvicorn>=0.34.0",
+    "python-dotenv>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.9.0",
+]
+
+[project.scripts]
+health-ai = "health_ai.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]

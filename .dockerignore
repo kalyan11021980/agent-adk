@@ -1,0 +1,7 @@
+.venv
+.git
+.env
+frontend
+__pycache__
+*.egg-info
+.ruff_cache

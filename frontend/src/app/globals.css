@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Healthcare palette */
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-200: #99f6e4;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #134e4a;
+
+  --color-medical-bg: #f8fffe;
+  --color-medical-card: #ffffff;
+  --color-medical-border: #e0f2f1;
+  --color-medical-text: #1a2e35;
+  --color-medical-muted: #5f7a83;
+
+  --color-severity-low: #16a34a;
+  --color-severity-moderate: #ca8a04;
+  --color-severity-high: #ea580c;
+  --color-severity-urgent: #dc2626;
+
+  --color-status-normal: #16a34a;
+  --color-status-low: #ca8a04;
+  --color-status-high: #ea580c;
+  --color-status-critical: #dc2626;
+}
+
+:root {
+  --background: #f8fffe;
+  --foreground: #1a2e35;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
