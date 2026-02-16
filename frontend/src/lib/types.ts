@@ -87,6 +87,7 @@ export interface A2AMessage {
 
 export interface A2ATask {
   id: string;
+  contextId?: string;
   status: {
     state: string;
     message?: A2AMessage;
@@ -120,10 +121,11 @@ export interface ChatMessage {
 export type ChatAction =
   | { type: "ADD_USER_MESSAGE"; text: string }
   | { type: "ADD_AGENT_PLACEHOLDER" }
-  | { type: "RESOLVE_AGENT_MESSAGE"; text: string; card?: HealthCard }
+  | { type: "RESOLVE_AGENT_MESSAGE"; text: string; card?: HealthCard; contextId?: string }
   | { type: "REJECT_AGENT_MESSAGE"; error: string };
 
 export interface ChatState {
   messages: ChatMessage[];
   isLoading: boolean;
+  contextId?: string;
 }

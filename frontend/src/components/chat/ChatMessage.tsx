@@ -2,6 +2,7 @@ import type { ChatMessage as ChatMessageType } from "@/lib/types";
 import { CardRenderer } from "@/components/cards/CardRenderer";
 import { TypingIndicator } from "./TypingIndicator";
 import { cn } from "@/lib/utils";
+import Markdown from "react-markdown";
 
 interface Props {
   message: ChatMessageType;
@@ -31,8 +32,12 @@ export function ChatMessage({ message }: Props) {
         >
           {message.isLoading ? (
             <TypingIndicator />
-          ) : (
+          ) : isUser ? (
             <p className="whitespace-pre-wrap">{message.text}</p>
+          ) : (
+            <div className="prose prose-sm max-w-none prose-headings:text-medical-text prose-headings:font-semibold prose-h3:text-base prose-h3:mt-4 prose-h3:mb-2 prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-strong:text-teal-700 prose-hr:my-3 prose-hr:border-medical-border">
+              <Markdown>{message.text}</Markdown>
+            </div>
           )}
         </div>
 

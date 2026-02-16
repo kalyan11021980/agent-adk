@@ -1,0 +1,50 @@
+{
+  "name": "health_ai_agent",
+  "description": "An AI-powered health assistant that provides visit summaries, symptom analysis, and lab report interpretations. Returns structured JSON suitable for generative UI rendering.",
+  "url": "http://localhost:8001/",
+  "version": "0.1.0",
+  "protocolVersion": "0.3.0",
+  "preferredTransport": "JSONRPC",
+  "additionalInterfaces": [
+    {
+      "transport": "JSONRPC",
+      "url": "http://localhost:8001/"
+    },
+    {
+      "transport": "HTTP",
+      "url": "http://localhost:8001/v1"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json"],
+  "skills": [
+    {
+      "id": "visit_summary",
+      "name": "Visit Summary",
+      "description": "Retrieve and summarize a patient's most recent visit, including provider details, diagnosis, medications prescribed, clinical notes, and follow-up instructions.",
+      "tags": ["health", "visit", "summary", "medical-records"]
+    },
+    {
+      "id": "symptom_analysis",
+      "name": "Symptom Analysis",
+      "description": "Analyze reported symptoms to provide possible conditions, severity assessment, recommended actions, and when to seek medical attention. Always includes a medical disclaimer.",
+      "tags": ["health", "symptoms", "triage", "analysis"]
+    },
+    {
+      "id": "lab_report_summary",
+      "name": "Lab Report Summary",
+      "description": "Parse and summarize laboratory test results, highlighting abnormal values, providing reference ranges, and offering a plain-language interpretation of findings.",
+      "tags": ["health", "lab-results", "diagnostics", "reports"]
+    }
+  ],
+  "provider": {
+    "organization": "Health AI",
+    "url": "https://health-ai.example.com"
+  },
+  "supportsAuthenticatedExtendedCard": false
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useReducer } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import { sendMessage as sendA2AMessage } from "@/lib/a2a-client";
 import { parseA2AResponse } from "@/lib/json-extractor";
 import type { ChatAction, ChatMessage, ChatState } from "@/lib/types";
@@ -47,6 +47,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return {
         ...state,
         isLoading: false,
+        contextId: action.contextId ?? state.contextId,
         messages: state.messages.map((m) =>
           m.id === PLACEHOLDER_ID
             ? {
@@ -94,14 +95,21 @@ const initialState: ChatState = {
 export function useChat() {
   const [state, dispatch] = useReducer(chatReducer, initialState);
 
+  // Use a ref for contextId to avoid stale closures in sendMessage.
+  // The ref is updated synchronously when RESOLVE_AGENT_MESSAGE fires,
+  // so rapid sequential sends always read the latest value.
+  const contextIdRef = useRef<string | undefined>(state.contextId);
+  contextIdRef.current = state.contextId;
+
   const sendMessage = useCallback(async (text: string) => {
     dispatch({ type: "ADD_USER_MESSAGE", text });
     dispatch({ type: "ADD_AGENT_PLACEHOLDER" });
 
     try {
-      const response = await sendA2AMessage(text);
+      const response = await sendA2AMessage(text, contextIdRef.current);
       const { text: agentText, card } = parseA2AResponse(response);
-      dispatch({ type: "RESOLVE_AGENT_MESSAGE", text: agentText, card });
+      const contextId = response.result?.contextId as string | undefined;
+      dispatch({ type: "RESOLVE_AGENT_MESSAGE", text: agentText, card, contextId });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to reach agent";
